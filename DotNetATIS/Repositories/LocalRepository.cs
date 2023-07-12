@@ -1,4 +1,4 @@
-namespace AtisStore.Db;
+namespace DotNetATIS.Repositories;
 
 public record Atis 
 {
@@ -6,8 +6,12 @@ public record Atis
     public string ? Icao { get; set; }
 }
 
-public class LocalRepository: IAtisRepository
+public class LocalRepository: AtisRepository
 {
+    public LocalRepository(HttpClient client) : base(client)
+    {   
+    }
+    
     private static List<Atis> _atis = new List<Atis>()
     {
         new Atis { Icao = "KJFK", Description = "Test for KJFK" },
@@ -19,10 +23,12 @@ public class LocalRepository: IAtisRepository
     {
         return _atis;
     } 
-
-    public Atis ? GetAtis(string icao) 
+    
+    override
+    public async Task<string> GetAtis(string icao) 
     {
         // Return the first ATIS that matches the ICAO code, ignore case.
-        return _atis.SingleOrDefault(atis => atis.Icao == icao.ToUpperInvariant());
+        // return _atis.SingleOrDefault(atis => atis.Icao == icao.ToUpperInvariant());
+        return await Task.FromResult("Test");
     }
 }

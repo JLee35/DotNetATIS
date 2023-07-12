@@ -1,5 +1,5 @@
 using Microsoft.OpenApi.Models;
-using AtisStore.Db;
+using DotNetATIS.Repositories;
 
 // Create the builder.
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +21,12 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ATIS API V1");
 });
 
-IAtisRepository repository = new LocalRepository();
+// Configure HttpClient.
+using HttpClient client = new();
+client.DefaultRequestHeaders.Accept.Clear();
+
+// IAtisRepository repository = new LocalRepository(client);
+IAtisRepository repository = new PilotEdgeRepository(client);
 
 // Configure the endpoints.
 app.MapGet("/", () => "Hello World!");
